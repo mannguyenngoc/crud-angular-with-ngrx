@@ -1,0 +1,86 @@
+.selected {
+    text-decoration: line-through;
+}
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+.task {
+    font-family: sans-serif;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #F7F7F9;
+    padding: 10px;
+    border: 1px solid gray;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    display: flex;
+    justify-content:space-between;
+    box-shadow: 3px 3px 3px 3px rgba(0,0,0,0.15);
+}
+.button__delete {
+    background-color: rgb(248, 61, 61);
+    color: white;
+    border: 0;
+    width: 20px;
+    padding: 4px;
+    cursor: pointer;
+    outline: none;
+}
+.button__edit {
+    background-color: rgb(97, 95, 240);
+    width: 20px;
+    border: 0;
+    color: white;
+    padding: 4px;
+    cursor: pointer;
+    outline: none;
+}
+.form-add_task {
+    text-align: center;
+}
+.form-add_task #task {
+    width: 300px;
+    height: 30px;
+    font-size: 14px;
+    padding: 5px 10px;
+    outline: none;
+    border-radius: 15px;
+    border: none;
+}
+.form-add_task #priority {
+    height: 30px;
+    outline: none;
+    font-size: 14px;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+}
+.form-add_task button[type="submit"] {
+    width: 80px;
+    height: 35px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 5px;
+    background-color: #0346e0;
+    color: white;
+}
+.input__edit {
+    width: 50px;
+}
+.button-export {
+    margin-left: 10px;
+}
+.button-export button {
+    background-color: #138046;
+    border: none;
+    border: 1px solid transparent;
+    color: white;
+    font-size: 16px;
+    padding: 5px 20px;
+    cursor: pointer;
+}

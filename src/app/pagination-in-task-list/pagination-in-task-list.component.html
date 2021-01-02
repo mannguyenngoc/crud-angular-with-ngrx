@@ -1,0 +1,5 @@
+<div>
+    <span *ngFor="let page of paginationNumber" [class.selected]="page === selectedPage" (click)="changePage(page)" >
+        {{page}}
+    </span>
+</div>

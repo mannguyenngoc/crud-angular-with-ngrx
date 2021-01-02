@@ -1,0 +1,38 @@
+<div>
+    <div class="button-export">
+        <button (click)="exportToExcel()" ><fa-icon [icon]="faFileExcel" size="1x"></fa-icon>&nbsp;Export to Excel</button>
+    </div>
+    <div>
+    </div>
+    <div class="container">
+        <div>
+            <div *ngFor="let task of tasks" >
+                <div *ngIf="!task.isFinished" class="task" (click)="choseTask(task)" >
+                    <p appTextSearch [taskName]="task.name" [name]="searchBoxValue" >
+                        {{task.name | formatTaskName}}
+                    </p>
+                    <div class="button">
+                        <button (click)="removeTask(task)" class="button__delete "><fa-icon [icon]="faTrashAlt" size="1x"></fa-icon></button>
+                        &nbsp;
+                        
+                    </div>
+                        <a routerLink="/todo/{{task._id}}" [queryParams]="{page: task.page}">Go to detail</a>
+                </div>      
+            </div>
+        </div>
+    <app-task-search (newItemEvent)="receiveSearchBoxValue($event)"></app-task-search>
+
+        <div *ngIf="selectedTask"class="show-task">
+            <p>{{selectedTask.name}}</p>
+        </div>
+    </div>
+    
+    
+    
+    <form [formGroup]="taskForm" (ngSubmit)="addTask()" class="form-add_task">
+        <input type="text" id="task" formControlName="name" placeholder="Write a new task">&nbsp;
+        <input type="number" id="priority" formControlName="priority" min="0" max="5"><br>
+        <button type="submit" [disabled]="!taskForm.valid">Add</button>
+    </form>
+    
+</div>

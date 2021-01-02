@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="pomodoro">
+        <div class="button-change">
+            <div (click)="changeState('pomodoro')" class="pomodoro-button" [class.selected]="isPomodoro">
+                Pomodoro
+            </div>
+            &nbsp;
+            <div (click)="changeState('shortbreak')" class="pomodoro-short_break" [class.selected]="isShortBreak">
+                Short Break
+            </div>
+        </div>
+        
+        <div class="number">
+            {{showTime(minute)}}:{{showTime(second)}}    
+        </div>
+        <button class="button-start" (click)="start()">
+            {{!isTicking ? 'Start' : 'Stop'}}
+        </button>
+    </div>
+    <div class="detail-text">{{isShortBreak ? 'Time to relax' : 'Time to work'}}</div>
+
+</div>

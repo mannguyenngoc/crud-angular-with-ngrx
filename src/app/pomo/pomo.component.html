@@ -1,0 +1,9 @@
+<div>
+    <input [(ngModel)]="minute" type="number">
+    <input [(ngModel)]="second" type="number">
+
+    <div class="time-display" >
+        {{showTime(minute)}}:{{showTime(second) }}
+    </div>
+    <button (click)="start()">Start</button>
+</div>

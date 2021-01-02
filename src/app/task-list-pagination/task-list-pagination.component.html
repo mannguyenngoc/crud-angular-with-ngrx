@@ -1,0 +1,7 @@
+<ul>
+    <li *ngFor="let task of tasksShow">
+        <a routerLink="/todo/{{task._id}}" [queryParams]="{page: task.page}">{{task.name}}</a>
+    </li>
+    
+    <app-pagination-in-task-list (page)="receivePage($event)"></app-pagination-in-task-list>
+</ul>

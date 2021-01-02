@@ -1,0 +1,8 @@
+<input type="text" placeholder="Search task" #searchBox (input)="searchTask(searchBox.value)" >
+<ul class="dropdown-task">
+    <li *ngFor="let task of tasksByName">
+        <a routerLink="/todo/{{task._id}}" appTextSearch [name]="searchBox.value" [taskName]="task.name">
+                {{task.name}}
+        </a>
+    </li>
+</ul>
