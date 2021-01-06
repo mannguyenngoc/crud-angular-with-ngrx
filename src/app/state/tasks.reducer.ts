@@ -1,22 +1,14 @@
 import {
   createReducer,
   on,
-  Action,
   createFeatureSelector,
   createSelector,
 } from '@ngrx/store';
 
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-
 import * as taskActions from './tasks.actions';
 import { addTask, getTask, getTaskById, removeTask } from './tasks.actions';
 import { Task } from './task.model';
-import { AppState } from './app.state';
-// import { AppAction } from './app.action';
-import { switchMapTo } from 'rxjs/operators';
 import { AppAction } from './app.action';
-
-// export const adapter: EntityAdapter<Task> = createEntityAdapter<Task>();
 
 export interface TaskArrayState {
   tasks: Task[];
@@ -25,23 +17,12 @@ export interface TaskArrayState {
   done: boolean;
   error?: Error | any;
 }
-export interface TaskState {
-  task: Task;
-}
 const initialArrayState: TaskArrayState = {
   tasks: [],
   selected: null,
   action: null,
   done: false,
   error: null,
-};
-
-const initialState: TaskState = {
-  task: {
-    _id: '',
-    name: '',
-    priority: 0,
-  },
 };
 
 export function reducer(state = initialArrayState, action: AppAction) {
@@ -64,12 +45,13 @@ export function reducer(state = initialArrayState, action: AppAction) {
     /**
      * Get task by id
      */
-    case taskActions.GET_TASK: {
-      console.log(action);
-      console.log(state.tasks);
-      var task = state.tasks.find(task => task._id === action.payload)
-      console.log(task);
-    }
+    case taskActions.GET_TASK:
+      {
+        console.log(action);
+        console.log(state.tasks);
+        var task = state.tasks.find((task) => task._id === action.payload);
+        console.log(task);
+      }
       return {
         ...state,
         action: taskActions.GET_TASK,
@@ -95,7 +77,7 @@ export function reducer(state = initialArrayState, action: AppAction) {
         error: action.payload,
       };
     case taskActions.UPDATE_TASK: {
-      console.log(state);
+      console.log('update task la la la ', state);
       return {
         ...state,
         selected: action.payload,
@@ -219,10 +201,9 @@ export const getAllTasks = createSelector(
 export const getOneTask = createSelector(
   getTaskState,
   (state: TaskArrayState) => {
-    console.log(state);
     console.log('state nwwwwww: ', state);
-    if (state.action === taskActions.GET_TASK) {  
-      console.log(state.selected);  
+    if (state.action === taskActions.GET_TASK) {
+      console.log(state.selected);
       return state.selected;
     } else return null;
   }

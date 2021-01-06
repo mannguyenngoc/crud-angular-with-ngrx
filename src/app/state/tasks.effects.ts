@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 
-import { Observable } from 'rxjs';
-import { Action } from '@ngrx/store';
-
 import { catchError, concatMap, map, mapTo, switchMap } from 'rxjs/operators';
 
 import { TodoService } from '../todo.service';
@@ -12,10 +9,8 @@ import { Task } from './task.model';
 import * as taskActions from './tasks.actions';
 import {
   AddTask,
-  addTask,
   AddTaskError,
   AddTaskSuccess,
-  editTask,
   RemoveTask,
   RemoveTaskSuccess,
   RemoveTaskError,
@@ -30,7 +25,7 @@ export class TaskEffects {
     ofType(taskActions.GET_TASKS),
     switchMap(() => this.todoService.getAllTask()),
     map((tasks) => {
-      console.log(tasks);
+      // console.log(tasks + '\nGet Success');
       return new taskActions.GetAllTasksSuccess(tasks);
     }),
     catchError((err) => [new taskActions.GetAllTasksError(err)])
@@ -40,10 +35,12 @@ export class TaskEffects {
     ofType(taskActions.GET_TASK),
     map((action: taskActions.GetTask) => {
       console.log(action);
-      return action.payload
+      return action.payload;
     }),
     switchMap((id) => this.todoService.getTask(id)),
-    map((task) => new taskActions.GetTaskSuccess(task)),
+    map((task) => {
+      return new taskActions.GetTaskSuccess(task);
+    }),
     catchError((err) => [new taskActions.GetTaskError(err)])
   );
   @Effect()
@@ -53,7 +50,9 @@ export class TaskEffects {
       console.log(action);
       return action.payload;
     }),
-    switchMap((task) => this.todoService.updateTask(Object.assign({isFinished: false}, task))),
+    switchMap((task) =>
+      this.todoService.updateTask(Object.assign({ isFinished: false }, task))
+    ),
     map(() => {
       console.log('hello i am map');
       return new taskActions.UpdateTaskSuccess();
@@ -62,17 +61,6 @@ export class TaskEffects {
   );
 
   @Effect()
-  // createTask$ = this.actions$.pipe(
-  //   ofType(taskActions.addTask.type),
-  //   // map((props: Task) => props),
-  //   switchMap((newTask: any) => {
-  //     console.log('newTask', newTask);
-  //     return this.todoService.addTask(newTask.task);
-  //   }),
-  //   map((res) => {
-  //     console.log(res);
-  //   })
-  // );
   createTask$ = this.actions$.pipe(
     ofType(taskActions.CREATE_TASK),
     map((action: AddTask) => action.payload),
@@ -82,18 +70,11 @@ export class TaskEffects {
   );
 
   @Effect()
-  // removeTask$ = this.actions$.pipe(
-  //   ofType(taskActions.removeTask.type),
-  //   switchMap((newTask: any) => {
-  //     console.log(newTask);
-  //     return this.todoService.removeTask(newTask.taskName);
-  //   })
-  // );
   removeTask$ = this.actions$.pipe(
     ofType(taskActions.DELETE_TASK),
     map((action: RemoveTask) => action.payload),
-    switchMap(id => this.todoService.removeTask(id)),
+    switchMap((id) => this.todoService.removeTask(id)),
     map((task: Task) => new RemoveTaskSuccess(task)),
     catchError((err) => [new RemoveTaskError(err)])
-  )
+  );
 }

@@ -1,6 +1,9 @@
 import { Action, createAction, props } from '@ngrx/store';
 import { Task } from './task.model';
 
+/**
+ * Define type of actions.
+ */
 export const GET_TASKS = '[TASKS] Tasks';
 export const GET_TASKS_SUCCESS = '[TASKS] Tasks Success';
 export const GET_TASKS_ERROR = '[TASKS] Tasks Error';

@@ -60,9 +60,8 @@ export class TodoComponent implements OnInit {
     this.currentPage = value;
     console.log(this.currentPage);
     this.tasksShow = this.tasks.filter(
-      (task, index) => task.page.toString() === this.currentPage
+      (task) => task.page.toString() === this.currentPage
     );
-    console.log(this.tasksShow);
   }
 
   choseTask(task: Todo) {

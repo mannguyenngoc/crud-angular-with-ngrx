@@ -2,12 +2,22 @@
     position: absolute;
     bottom: 200px;
     left: 1200px;
-    width: 200px;
+    width: 280px;
+    padding: 5px 20px;
     text-align: center;
-    border: 1px solid red;
+    border: 1px solid rgb(243, 6, 6);
+    display: flex;
+    justify-content: space-around;
 }
 .selected {
     background-color: white;
-    padding: 1px 5px;
+    padding: 0px 3px;
+    align-items: center;
     color: black;
+}
+.clicked {
+    cursor: pointer;
+}
+.un-clicked {
+    opacity: 0.3;
 }

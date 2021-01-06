@@ -10,12 +10,12 @@ export class PaginationInTaskListComponent implements OnInit {
   @Input() pages: number = 0;
   @Output() page = new EventEmitter<string>();
 
-  pageDefault : number = 1;
+  pageDefault: number = 1;
 
   selectedPage: number = 1;
 
   paginationNumber: number[] = [];
-  
+
   constructor(private route: ActivatedRoute) {}
 
   ngOnChanges() {
@@ -28,8 +28,39 @@ export class PaginationInTaskListComponent implements OnInit {
     this.createPageNumber();
   }
 
+  handlePaginationNumber(array, selectedPage) {
+    let result = array.map((pageNumber) => pageNumber.toString());
+
+    const i = result.indexOf(selectedPage.toString());
+    console.log(i);
+    if (i == 0) {
+      result = [result[0], '...', result[result.length - 1]];
+    } else if (i == result.length - 1) {
+      result = [result[0], '...', result[result.length - 1]];
+    } else {
+      i === 1
+        ? (result = [result[0], result[1], '...', result[result.length - 1]])
+        : i < result.length - 2
+        ? (result = [
+            result[0],
+            '...',
+            selectedPage.toString(),
+            '...',
+            result[result.length - 1],
+          ])
+        : (result = [
+            result[0],
+            '...',
+            selectedPage.toString(),
+            result[result.length - 1],
+          ]);
+    }
+
+    return result;
+  }
   createPageNumber() {
-    this.selectedPage = parseInt(this.route.snapshot.queryParams.page) | 1;
+    this.selectedPage =
+      parseInt(this.route.snapshot.queryParams.page) | this.selectedPage | 1;
 
     if (this.paginationNumber.length == 0)
       for (let i = 1; i <= this.pages; i++) {
@@ -37,7 +68,6 @@ export class PaginationInTaskListComponent implements OnInit {
       }
   }
   changePage(value: number): void {
-    console.log(value);
     this.selectedPage = value;
     this.page.emit(value.toString());
   }

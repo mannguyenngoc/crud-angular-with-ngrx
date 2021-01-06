@@ -27,7 +27,7 @@
         </div>
     </div>
     
-    <app-pagination-in-task-list *ngIf="pages != 0" [pages]="pages" (page)="receivePageNumber($event)"></app-pagination-in-task-list>
+    <app-pagination-in-task-list *ngIf="pages != 0" [pages]="pages" (page)="receivePageNumber($event)" class="pagination-in-main-page"></app-pagination-in-task-list>
     
     <form [formGroup]="taskForm" (ngSubmit)="addTask()" class="form-add_task">
         <input type="text" id="task" formControlName="name" placeholder="Write a new task">&nbsp;
