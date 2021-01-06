@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 
 import { Store, select } from '@ngrx/store';
 import { AppState } from './state/app.state';
-import { getTask } from './state/tasks.actions';
+import { GetAllTasks, GetTask, getTask } from './state/tasks.actions';
 
 import { Task } from './state/task.model';
 import { selectTasks } from './state/tasks.selectors';
 import { faThermometerHalf } from '@fortawesome/free-solid-svg-icons';
+import { getAllTasks } from './state/tasks.reducer';
 
 // directive, modify pipe, search, detail, listing, convert to reactive form, template driven form, reactive form
 @Component({
@@ -21,12 +22,16 @@ export class AppComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
-    const tasks = this.tasks;
-    this.store.dispatch(getTask({tasks}));
+    this.getTasks();
+  }
 
-    this.store.select(selectTasks).subscribe((res) => {
-      console.log(res);
-    })
+  getTasks() {
+    this.store.dispatch(new GetAllTasks());
+    // await this.store.dispatch(new GetTask('5fe1b6afc39c2f22a030f61d'));
+
+    // await this.store.select(getAllTasks).subscribe((res) => {
+    //   console.log(res);
+    // });
   }
   // ngOnInit() {
   //   const tasks = this.tasks;

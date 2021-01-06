@@ -1,5 +1,12 @@
-<div>
+<div class="container">
+    <span *ngIf="selectedPage > 1" (click)="changePage(selectedPage-1)">Back</span>
+    &nbsp;
     <span *ngFor="let page of paginationNumber" [class.selected]="page === selectedPage" (click)="changePage(page)" >
         {{page}}
+    </span>
+    &nbsp;
+
+    <span *ngIf="pages > selectedPage" (click)="changePage(selectedPage + 1)">
+        Next
     </span>
 </div>

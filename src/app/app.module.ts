@@ -10,7 +10,6 @@ import { MessagesComponent } from './messages/messages.component';
 import { HttpClientModule } from '@angular/common/http';
 
 import { TodoComponent } from './todo/todo.component';
-import { DoneComponent } from './done/done.component';
 import { PomoComponent } from './pomo/pomo.component';
 import { PomodoroComponent } from './pomodoro/pomodoro.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -21,7 +20,7 @@ import { TaskSearchComponent } from './task-search/task-search.component';
 import { TextSearchDirective } from './text-search.directive';
 
 import { StoreModule } from '@ngrx/store';
-import { reducer, taskReducer } from './state/tasks.reducer';
+import { reducer} from './state/tasks.reducer';
 
 import { EffectsModule } from '@ngrx/effects';
 import { TaskEffects } from './state/tasks.effects';
@@ -34,7 +33,6 @@ import { PaginationInTaskListComponent } from './pagination-in-task-list/paginat
     AppComponent,
     MessagesComponent,
     TodoComponent,
-    DoneComponent,
     PomoComponent,
     PomodoroComponent,
     TaskDetailComponent,

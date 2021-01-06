@@ -17,7 +17,7 @@ export class TaskSearchComponent implements OnInit {
   constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
-    this.todoService.getAllTask().subscribe((tasks) => {
+    this.todoService.getAllTaskStore().subscribe((tasks) => {
       this.tasks = tasks;
     });
   }

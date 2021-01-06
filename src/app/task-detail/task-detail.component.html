@@ -1,13 +1,16 @@
 <div *ngIf="task" class="container">
     <div>
-        <form [formGroup]="taskForm" (ngSubmit)="editTask()">
-            <input type="text" id="task" formControlName="name" [(ngModel)]="task.name">&nbsp;
-            <input type="text" id="priority" formControlName="priority" [(ngModel)]="task.priority">&nbsp;
+        <span>{{task.name}}</span>
+        <form [formGroup]="taskForm" (ngSubmit)="editTask(name.value, priority.value)">
+            <input type="text" #name id="task" formControlName="name">&nbsp;
+            <input type="text" #priority id="priority" formControlName="priority">&nbsp;
             <button type="submit" [disabled]="!taskForm.valid">Edit</button>
         </form>
         <a routerLink="/todo">Go back</a>
     </div>
     
-    <app-task-list-pagination></app-task-list-pagination>
-    
+    <app-task-list-pagination [taskDetailId]="taskDetailId"(changeTaskDetailView)="changeView($event)"></app-task-list-pagination>
+</div>
+<div *ngIf="!task">
+    <span>{{error}}</span>
 </div>

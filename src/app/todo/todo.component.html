@@ -6,8 +6,8 @@
     </div>
     <div class="container">
         <div>
-            <div *ngFor="let task of tasks" >
-                <div *ngIf="!task.isFinished" class="task" (click)="choseTask(task)" >
+            <div *ngFor="let task of tasksShow" >
+                <div class="task" (click)="choseTask(task)" >
                     <p appTextSearch [taskName]="task.name" [name]="searchBoxValue" >
                         {{task.name | formatTaskName}}
                     </p>
@@ -27,7 +27,7 @@
         </div>
     </div>
     
-    
+    <app-pagination-in-task-list *ngIf="pages != 0" [pages]="pages" (page)="receivePageNumber($event)"></app-pagination-in-task-list>
     
     <form [formGroup]="taskForm" (ngSubmit)="addTask()" class="form-add_task">
         <input type="text" id="task" formControlName="name" placeholder="Write a new task">&nbsp;

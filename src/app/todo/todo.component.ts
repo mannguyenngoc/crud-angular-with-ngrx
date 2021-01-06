@@ -8,21 +8,11 @@ import {
   faEdit,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
 import * as fileSaver from 'file-saver';
 
-import {
-  retrievedTask,
-  addTask,
-  removeTask,
-  getTask,
-} from '../state/tasks.actions';
-
-import { selectTasks } from '../state/tasks.selectors';
-
 import { Task } from '../state/task.model';
-import { Observable } from 'rxjs';
 import { AppState } from '../state/app.state';
 
 @Component({
@@ -31,13 +21,20 @@ import { AppState } from '../state/app.state';
   styleUrls: ['./todo.component.css'],
 })
 export class TodoComponent implements OnInit {
-  tasks: ReadonlyArray<Task> | any;
+  tasks: ReadonlyArray<Task> | any = [];
   selectedTask: Todo | any;
+
+  tasksShow: ReadonlyArray<Task> | any = [];
+
+  pages: number = 1;
+
+  currentPage: number = 1;
 
   searchBoxValue: string = '';
 
   search: string = '';
 
+  //icon  
   faFileExcel = faFileExcel;
   faTrashAlt = faTrashAlt;
   faEdit = faEdit;
@@ -49,100 +46,79 @@ export class TodoComponent implements OnInit {
 
   constructor(
     private todoService: TodoService,
-    private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
     this.getTasks();
-
-    // console.log(this.tasks);
-    /*
-      this.todoService.getAllTask().subscribe((task) => {
-        console.log(222,task);
-        this.store.dispatch(retrievedTask({ task }));
-      });
-    */
   }
+  
   receiveSearchBoxValue(value: string): void {
     this.searchBoxValue = value;
   }
-  formatTaskName(name: string) {
-    return name + ' haha';
+  
+  receivePageNumber(value) {
+    this.currentPage = value;
+    console.log(this.currentPage);
+    this.tasksShow = this.tasks.filter(
+      (task, index) => task.page.toString() === this.currentPage
+    );
+    console.log(this.tasksShow);
   }
+
   choseTask(task: Todo) {
     this.selectedTask = task;
   }
-  test: Task[] = [];
+  // test: Task[] = [];
 
   //with NgRx
-  getTasks(): void {
-    /*
-    this.todoService.getAllTask().subscribe((tasks) => {
-      console.log(tasks);
-      this.tasks = tasks;
-    });
-    */
-    this.todoService.getAllTask().subscribe(async (tasks) => {
-      await this.store.dispatch(getTask({ tasks }));
 
-      this.tasks = await this.store.select(selectTasks);
-      // console.log(this.tasks);
+  getTasks() {
 
-      this.tasks.subscribe((res) => {
-        this.tasks = res.tasks.map((task, index) => {
-          const page = Math.round(index/10) + 1;
-          return Object.assign({page: page}, task);
-        });
+    this.todoService.getAllTaskStore().subscribe((res) => {
+      
+      // adding property page
+      this.tasks = res.map((task, index) => {
+        const page = Math.floor(index / 10) + 1;
+        return Object.assign({ page: page }, task);
       });
-      console.log(this.tasks);
+
+      console.log('hello tasks', this.tasks);
+      console.log('current page: ', this.currentPage);
+      
+      //choose which tasks will be shown
+      this.tasksShow = this.tasks.filter(
+        (task) => task.page.toString() === this.currentPage.toString()
+      );
+      
+      console.log('hello tasks show', this.tasksShow);
+      
+      if (this.tasks.length != 0) {
+        this.pages = this.tasks[this.tasks.length - 1].page;
+      }
     });
-
-    // this.tasks = this.store.select(selectTasks);
-
-    // console.log(1111, this.tasks);
   }
+  /**
+   * Add task action
+   */
   addTask(): void {
     const task = this.taskForm.value;
-    this.store.dispatch(addTask({ task }));
-  }
-  removeTask(task: Task): void {
-    console.log('task in remove Task: ', task);
-    const taskName = task.name;
+    this.tasks.push(task);
 
-    this.store.dispatch(removeTask({ taskName }));
+    this.todoService.addTaskStore(task);
   }
-  /*
-  addTask(): void {
-    this.tasks.push(this.taskForm.value);
-    this.todoService.addTask(this.taskForm.value).subscribe((task) => {
-      console.log(task);
-    });
+  /**
+   * Delete task action
+   */
+  removeTask(task: Task): void {
+    this.tasks = this.tasks.filter((t) => t._id != task._id);
+
+    this.todoService.removeTaskStore(task._id);
   }
-  
-  deleteTask(task: Todo): void {
-    this.tasks.splice(this.tasks.indexOf(task), 1);
-    this.todoService.removeTask(task).subscribe((res) => {
-      console.log(res);
-    });
-  }
-  
-  updateTask(task: Todo): void {
-    this.todoService.updateTask(task).subscribe((res) => {
-      console.log(res);
-    });
-  }
-  changeTaskState(task: Todo): void {
-    task.isFinished = !task.isFinished;
-    this.todoService.updateTask(task).subscribe((res) => {
-      console.log(res);
-    });
-  }
-  */
+
   exportToExcel(): void {
     this.todoService.exportToExcel().subscribe((res: any) => {
       console.log(res);
       let blob: any = new Blob([res], { type: 'text/json; charset=utf-8' });
-      //const url = window.URL.createObjectURL(blob);
       fileSaver.saveAs(blob, 'excel.xlsx');
     });
   }

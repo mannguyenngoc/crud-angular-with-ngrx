@@ -1,16 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { TodoService, Todo } from '../todo.service';
-import { ActivatedRoute } from '@angular/router';
-// import { couldStartTrivia } from 'typescript';
+import { Component, OnInit } from '@angular/core';
+import { TodoService } from '../todo.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 
-import { Store, select } from '@ngrx/store';
-import { AppState } from '../state/app.state';
-
-import { getTaskById, getTask } from '../state/tasks.actions';
-
-import { selectTasks } from '../state/tasks.selectors';
 import { Task } from '../state/task.model';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-detail',
@@ -21,52 +15,83 @@ export class TaskDetailComponent implements OnInit {
   task: Task | any;
   listTasks: Task[] = [];
 
+  error: string = 'Error';
+  isReRender: boolean = false;
+
+  taskClone: Task | any = { _id: '', name: '', priority: 0 };
+
+  taskDetailId: string = '';
+
   taskForm: FormGroup | any;
 
   constructor(
-    private todoService: TodoService,
     private route: ActivatedRoute,
-    private store: Store<AppState>
+    private router: Router,
+    private todoService: TodoService
   ) {}
 
+  changeView(value) {
+    this.task = value;
+  }
+
   ngOnInit(): void {
+    this.todoService.getAllTaskStore().subscribe((tasks) => {
+      this.listTasks = tasks;
+    });
+
     this.getTask();
-    this.getAllTask();
+
+    // create form
     this.taskForm = new FormGroup({
       name: new FormControl(''),
       priority: new FormControl(''),
     });
+  }
 
-    console.log('this task form' + this.taskForm);
+  editTask(name: string, priority: string) {
+    // make task clone can be edited
+    this.taskClone = { _id: '', name: '', priority: 0 };
+
+    this.taskClone._id = this.task._id;
+    this.taskClone.name = name;
+    this.taskClone.priority = priority;
+
+    // update task in store
+    this.todoService.updateTaskStore(this.taskClone);
+
+    this.getTask();
   }
-  editTask(): void {
-    this.todoService.updateTask(this.task).subscribe((task) => {
-      console.log(task);
-    });
-  }
-  async getTask() {
+
+  getTask() {
+    var index = 0;
+
     const id = this.route.snapshot.params.id;
-    const taskId = id;
-    await this.store.dispatch(getTaskById({ taskId }));
+    const page = this.route.snapshot.queryParams.page || 1;
 
-    // tại sao ở đây chọn selector khác mới được
-    this.task = await this.store.select(selectTasks);
-    console.log(11,this.task);
-    this.task.subscribe((res) => {
-      console.log('res is: ', res);
-      this.task = JSON.parse(JSON.stringify(res.task[0]));
-      // this.task = [...res.task[0]]
-    });
+    this.taskDetailId = id;
 
-    // this.todoService
-    //   .getTask(id)
-    //   .subscribe((task) => {
-    //     this.task = task;
-    //   });
-  }
-  getAllTask(): void {
-    this.todoService.getAllTask().subscribe(async (tasks) => {
-      this.listTasks = tasks;
-    });
+    this.todoService
+      .getTaskStore(id)
+      .pipe(filter((task) => !!task))
+      .pipe(take(1))
+      .subscribe((task) => {
+        if (task != null) {
+          for (let i = 0; i < this.listTasks.length; i++) {
+            if (this.listTasks[i]._id === task._id) {
+              index = i;
+              break;
+            }
+          }
+        }
+        if (page != Math.ceil((index + 1) / 10)) {
+          this.task = null;
+        } else {
+          this.router.navigate([`/todo/${id}`], {
+            queryParams: { page: Math.ceil((index + 1) / 10) },
+          });
+
+          this.task = task;
+        }
+      });
   }
 }
