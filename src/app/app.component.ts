@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Store, select } from '@ngrx/store';
 import { AppState } from './state/app.state';
-import { GetAllTasks, GetTask, getTask } from './state/tasks.actions';
+import { GetAllTasks, GetPages, GetTask, getTask } from './state/tasks.actions';
 
 import { Task } from './state/task.model';
 import { selectTasks } from './state/tasks.selectors';
@@ -26,7 +26,6 @@ export class AppComponent implements OnInit {
   }
 
   getTasks() {
-    this.store.dispatch(new GetAllTasks());
     // await this.store.dispatch(new GetTask('5fe1b6afc39c2f22a030f61d'));
 
     // await this.store.select(getAllTasks).subscribe((res) => {

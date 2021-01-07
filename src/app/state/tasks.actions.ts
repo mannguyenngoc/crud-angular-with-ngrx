@@ -4,6 +4,12 @@ import { Task } from './task.model';
 /**
  * Define type of actions.
  */
+export const GET_PAGES = '[PAGES] Pages ';
+export const GET_PAGES_SUCCESS = '[PAGES] Pages Success';
+
+export const GET_CURRENT_PAGE = '[CURRENT PAGE] Current Page';
+export const GET_CURRENT_PAGE_SUCCESS = '[CURRENT PAGE] Current Page Success';
+
 export const GET_TASKS = '[TASKS] Tasks';
 export const GET_TASKS_SUCCESS = '[TASKS] Tasks Success';
 export const GET_TASKS_ERROR = '[TASKS] Tasks Error';
@@ -16,16 +22,34 @@ export const UPDATE_TASK = '[UPDATE] Task';
 export const UPDATE_TASK_SUCCESS = '[UPDATE] Task Success';
 export const UPDATE_TASK_ERROR = '[UPDATE] Task Error';
 
-export const CREATE_TASK =  '[ADD] Task';
+export const CREATE_TASK = '[ADD] Task';
 export const CREATE_TASK_SUCCESS = '[ADD] Task Success';
-export const CREATE_TASK_ERROR =  '[ADD] Task Error';
+export const CREATE_TASK_ERROR = '[ADD] Task Error';
 
 export const DELETE_TASK = '[DELETE] TASK';
 export const DELETE_TASK_SUCCESS = '[DELETE] TASK Success';
 export const DELETE_TASK_ERROR = '[DELETE] Task Error';
 
+export class GetPages implements Action {
+  readonly type = GET_PAGES;
+}
+export class GetPagesSuccess implements Action {
+  readonly type = GET_PAGES_SUCCESS;
+
+  constructor(public payload: number) {}
+}
+export class GetCurrentPage implements Action {
+  readonly type = GET_CURRENT_PAGE;
+}
+export class GetCurrentPageSuccess implements Action {
+  readonly type = GET_CURRENT_PAGE_SUCCESS;
+
+  constructor(public payload: number) {}
+}
 export class GetAllTasks implements Action {
   readonly type = GET_TASKS;
+
+  constructor(public payload: string) {}
 }
 export class GetAllTasksSuccess implements Action {
   readonly type = GET_TASKS_SUCCESS;
@@ -66,14 +90,14 @@ export class UpdateTaskError implements Action {
   constructor(public payload: Error) {}
 }
 export class AddTask implements Action {
-  readonly type =  CREATE_TASK;
+  readonly type = CREATE_TASK;
 
   constructor(public payload: Task) {}
 }
 export class AddTaskSuccess implements Action {
   readonly type = CREATE_TASK_SUCCESS;
 
-  constructor(public payload: string) {}
+  constructor(public payload: any) {}
 }
 export class AddTaskError implements Action {
   readonly type = CREATE_TASK_ERROR;

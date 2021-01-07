@@ -16,6 +16,9 @@ export interface TaskArrayState {
   action: string | any;
   done: boolean;
   error?: Error | any;
+  pages: number;
+  currentPage: number;
+  pageIndex: number;
 }
 const initialArrayState: TaskArrayState = {
   tasks: [],
@@ -23,25 +26,58 @@ const initialArrayState: TaskArrayState = {
   action: null,
   done: false,
   error: null,
+  pages: 0,
+  currentPage: 0,
+  pageIndex: 0,
 };
 
 export function reducer(state = initialArrayState, action: AppAction) {
   switch (action.type) {
-    case taskActions.GET_TASKS:
+    case taskActions.GET_PAGES:
+      return {
+        ...state,
+        action: taskActions.GET_PAGES,
+        done: false,
+        selected: null,
+      };
+    case taskActions.GET_PAGES_SUCCESS:
+      return {
+        ...state,
+        pages: action.payload,
+      };
+    case taskActions.GET_CURRENT_PAGE:
+      return {
+        ...state,
+        action: taskActions.GET_CURRENT_PAGE,
+        done: false,
+        selected: null,
+      };
+    case taskActions.GET_CURRENT_PAGE_SUCCESS:
+      return {
+        ...state,
+        currentPage: action.payload,
+      };
+    case taskActions.GET_TASKS: {
+      console.log(action);
       return {
         ...state,
         action: taskActions.GET_TASKS,
         done: false,
         selected: null,
         error: null,
+        currentPage: parseInt(action.payload),
+        pageIndex: parseInt(action.payload),
       };
-    case taskActions.GET_TASKS_SUCCESS:
+    }
+    case taskActions.GET_TASKS_SUCCESS: {
+      console.log(action);
       return {
         ...state,
         done: true,
         selected: null,
         tasks: action.payload,
       };
+    }
     /**
      * Get task by id
      */
@@ -78,6 +114,7 @@ export function reducer(state = initialArrayState, action: AppAction) {
       };
     case taskActions.UPDATE_TASK: {
       console.log('update task la la la ', state);
+      console.log(action);
       return {
         ...state,
         selected: action.payload,
@@ -97,16 +134,16 @@ export function reducer(state = initialArrayState, action: AppAction) {
       const index = state.tasks.findIndex((h) => h._id === state.selected._id);
       console.log(index);
       if (index >= 0) {
-        const tasks = [
-          ...state.tasks.slice(0, index),
-          state.selected,
-          ...state.tasks.slice(index + 1),
-        ];
-
+        // const tasks = [
+        //   ...state.tasks.slice(0, index),
+        //   state.selected,
+        //   ...state.tasks.slice(index + 1),
+        // ];
+        console.log(state);
         return {
           ...state,
-          tasks,
           done: true,
+          // selected: state.selected,
           selected: null,
           error: null,
         };
@@ -124,7 +161,6 @@ export function reducer(state = initialArrayState, action: AppAction) {
       return {
         ...state,
         selected: action.payload,
-        tasks: [...state.tasks, action.payload],
         action: taskActions.CREATE_TASK,
         done: false,
         error: null,
@@ -134,10 +170,11 @@ export function reducer(state = initialArrayState, action: AppAction) {
     case taskActions.CREATE_TASK_SUCCESS: {
       const newTask = {
         ...state.selected,
-        _id: action.payload,
+        _id: action.payload._id,
       };
+      console.log(newTask);
       const tasks = [...state.tasks, newTask];
-
+      console.log(tasks);
       return {
         ...state,
         tasks,
@@ -196,6 +233,18 @@ export const getAllTasks = createSelector(
   (state: TaskArrayState) => {
     console.log('state now: ', state);
     return state.tasks;
+  }
+);
+export const getPages = createSelector(
+  getTaskState,
+  (state: TaskArrayState) => {
+    return state.pages;
+  }
+);
+export const getCurrentPage = createSelector(
+  getTaskState,
+  (state: TaskArrayState) => {
+    return state.currentPage;
   }
 );
 export const getOneTask = createSelector(

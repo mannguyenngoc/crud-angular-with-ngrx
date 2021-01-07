@@ -1,9 +1,9 @@
 <div class="container">
-    <div *ngIf="selectedPage > 1" (click)="changePage(selectedPage-1)" class="clicked">Back</div>
+    <div *ngIf="selectedPage > 1" (click)="changePage(1*selectedPage-1)" class="clicked">Back</div>
     <div *ngIf="1 >= selectedPage" class="un-clicked">Back</div>
     &nbsp;
     <div>
-        <span *ngFor="let page of handlePaginationNumber(paginationNumber, selectedPage)" [class.selected]="page === selectedPage.toString()" (click)="changePage(page)" >
+        <span *ngFor="let page of paginationNumber" [class.selected]="page.toString() === selectedPage.toString()" (click)="changePage(page)" >
             {{page}}&nbsp;
         </span>
     </div>

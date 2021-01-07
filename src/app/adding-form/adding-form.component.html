@@ -1,0 +1,11 @@
+<div class="container">
+    <form class="form" [formGroup]="addForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" formControlName="name" placeholder="Write the task's name">
+            <span *ngIf="(addFormControl.name.touched || submitted) && addFormControl.name.errors?.required">
+                Name is required
+            </span>
+        </div>
+    </form>
+</div>

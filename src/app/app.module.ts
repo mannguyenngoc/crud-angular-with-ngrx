@@ -26,7 +26,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { TaskEffects } from './state/tasks.effects';
 import { TaskListPaginationComponent } from './task-list-pagination/task-list-pagination.component';
 import { PaginationInTaskListComponent } from './pagination-in-task-list/pagination-in-task-list.component';
-
+import { AddingFormComponent } from './adding-form/adding-form.component';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -41,17 +43,23 @@ import { PaginationInTaskListComponent } from './pagination-in-task-list/paginat
     TextSearchDirective,
     TaskListPaginationComponent,
     PaginationInTaskListComponent,
+    AddingFormComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     StoreModule.forRoot({ tasks: reducer }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: environment.production, // Restrict extension to log-only mode
+    }),
     EffectsModule.forRoot([TaskEffects]),
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
     FontAwesomeModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [],
   bootstrap: [AppComponent],

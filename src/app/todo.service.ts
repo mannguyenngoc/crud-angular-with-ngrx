@@ -6,11 +6,19 @@ import { Store } from '@ngrx/store';
 import { AppState } from './state/app.state';
 import {
   AddTask,
+  GetAllTasks,
+  GetCurrentPage,
+  GetPages,
   GetTask,
   RemoveTask,
   UpdateTask,
 } from './state/tasks.actions';
-import { getAllTasks, getOneTask } from './state/tasks.reducer';
+import {
+  getAllTasks,
+  getCurrentPage,
+  getOneTask,
+  getPages,
+} from './state/tasks.reducer';
 
 export interface Todo {
   _id: string;
@@ -26,8 +34,11 @@ export class TodoService {
   getTask(id: any): Observable<Todo> {
     return this.http.get<Todo>('http://localhost:3000/api/todo/' + id);
   }
-  getAllTask(): Observable<Todo[]> {
-    return this.http.get<Todo[]>('http://localhost:3000/api/todo');
+  getAllTask(): Observable<number> {
+    return this.http.get<number>('http://localhost:3000/api/todo');
+  }
+  getTasksByPage(page: any): Observable<Todo[]> {
+    return this.http.get<Todo[]>('http://localhost:3000/api/todo/page/' + page);
   }
   getAllTaskCompleted(): Observable<Todo[]> {
     return this.http.get<Todo[]>('http://localhost:3000/api/todo/completed');
@@ -59,8 +70,22 @@ export class TodoService {
   /**
    * With store
    */
+  getPagesStore() {
+    this.store.dispatch(new GetPages());
+
+    return this.store.select(getPages);
+  }
+  getCurrentPage() {
+    this.store.dispatch(new GetCurrentPage());
+
+    return this.store.select(getCurrentPage);
+  }
+  getTasksByPageStore(page) {
+    this.store.dispatch(new GetAllTasks(page));
+
+    return this.store.select(getAllTasks);
+  }
   getAllTaskStore() {
-    var tasks: Task[] = [];
 
     return this.store.select(getAllTasks);
   }

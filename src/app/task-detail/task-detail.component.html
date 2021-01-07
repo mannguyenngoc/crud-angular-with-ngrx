@@ -1,4 +1,5 @@
 <div *ngIf="task" class="container">
+
     <div>
         <span>{{task.name}}</span>
         <form [formGroup]="taskForm" (ngSubmit)="editTask(name.value, priority.value)">

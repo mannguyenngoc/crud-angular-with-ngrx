@@ -3,5 +3,5 @@
         <a routerLink="/todo/{{task._id}}" [queryParams]="{page: task.page}" (click)="sayHello(task)">{{task.name}}</a>
     </li>
     
-    <app-pagination-in-task-list [pages]="totalPages" (page)="receivePage($event)"></app-pagination-in-task-list>
+    <app-pagination-in-task-list *ngIf="totalPages != 0" [pages]="totalPages" (page)="receivePage($event)"></app-pagination-in-task-list>
 </ul>

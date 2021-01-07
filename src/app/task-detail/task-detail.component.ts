@@ -35,10 +35,6 @@ export class TaskDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.todoService.getAllTaskStore().subscribe((tasks) => {
-      this.listTasks = tasks;
-    });
-
     this.getTask();
 
     // create form
@@ -62,36 +58,54 @@ export class TaskDetailComponent implements OnInit {
     this.getTask();
   }
 
+  /**
+   * Get 1 task by id
+   */
   getTask() {
-    var index = 0;
-
     const id = this.route.snapshot.params.id;
     const page = this.route.snapshot.queryParams.page || 1;
 
+    console.log(page);
     this.taskDetailId = id;
 
+    // this.todoService.getAllTaskStore().subscribe((tasks) => {
+    //   console.log(tasks);
+    //   console.log(id);
+    //   const task = tasks.find((task) => {
+    //     return task._id === id;
+    //   });
+
+    //   if (task) {
+    //     this.task = task;
+    //   } else
+    //     this.todoService
+    //       .getTaskStore(id)
+    //       .pipe(filter((task) => !!task))
+    //       .pipe(take(1))
+    //       .subscribe((task) => {
+    //         console.log(task);
+
+    //         this.router.navigate([`/todo/${id}`], {
+    //           queryParams: { page: page },
+    //         });
+
+    //         this.task = task;
+    //         // }
+    //       });
+    // });
     this.todoService
       .getTaskStore(id)
       .pipe(filter((task) => !!task))
       .pipe(take(1))
       .subscribe((task) => {
-        if (task != null) {
-          for (let i = 0; i < this.listTasks.length; i++) {
-            if (this.listTasks[i]._id === task._id) {
-              index = i;
-              break;
-            }
-          }
-        }
-        if (page != Math.ceil((index + 1) / 10)) {
-          this.task = null;
-        } else {
-          this.router.navigate([`/todo/${id}`], {
-            queryParams: { page: Math.ceil((index + 1) / 10) },
-          });
+        console.log(task);
 
-          this.task = task;
-        }
+        this.router.navigate([`/todo/${id}`], {
+          queryParams: { page: page },
+        });
+
+        this.task = task;
+        // }
       });
   }
 }

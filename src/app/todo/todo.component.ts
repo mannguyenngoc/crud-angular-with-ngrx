@@ -34,7 +34,7 @@ export class TodoComponent implements OnInit {
 
   search: string = '';
 
-  //icon  
+  //icon
   faFileExcel = faFileExcel;
   faTrashAlt = faTrashAlt;
   faEdit = faEdit;
@@ -44,24 +44,26 @@ export class TodoComponent implements OnInit {
     priority: new FormControl(0),
   });
 
-  constructor(
-    private todoService: TodoService,
-  ) {}
+  constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
+    // this.getTasks();
+
     this.getTasks();
+    this.todoService.getPagesStore().subscribe((res) => {
+      this.pages = Math.ceil(res / 10);
+    });
   }
-  
+
   receiveSearchBoxValue(value: string): void {
     this.searchBoxValue = value;
   }
-  
+
   receivePageNumber(value) {
     this.currentPage = value;
     console.log(this.currentPage);
-    this.tasksShow = this.tasks.filter(
-      (task) => task.page.toString() === this.currentPage
-    );
+
+    // this.getTasks();
   }
 
   choseTask(task: Todo) {
@@ -71,29 +73,36 @@ export class TodoComponent implements OnInit {
 
   //with NgRx
 
+  // getTasks() {
+  //   this.todoService.getAllTaskStore().subscribe((res) => {
+  //     // adding property page
+  //     this.tasks = res.map((task, index) => {
+  //       const page = Math.floor(index / 10) + 1;
+  //       return Object.assign({ page: page }, task);
+  //     });
+
+  //     console.log('hello tasks', this.tasks);
+  //     console.log('current page: ', this.currentPage);
+
+  //     //choose which tasks will be shown
+  //     this.tasksShow = this.tasks.filter(
+  //       (task) => task.page.toString() === this.currentPage.toString()
+  //     );
+
+  //     console.log('hello tasks show', this.tasksShow);
+
+  //     if (this.tasks.length != 0) {
+  //       this.pages = this.tasks[this.tasks.length - 1].page;
+  //     }
+  //   });
+  // }
+
   getTasks() {
-
-    this.todoService.getAllTaskStore().subscribe((res) => {
-      
-      // adding property page
-      this.tasks = res.map((task, index) => {
-        const page = Math.floor(index / 10) + 1;
-        return Object.assign({ page: page }, task);
+    this.todoService.getTasksByPageStore(this.currentPage).subscribe((res) => {
+      this.tasksShow = res.map((task)  => {
+        return Object.assign({page: this.currentPage}, task)
       });
-
-      console.log('hello tasks', this.tasks);
-      console.log('current page: ', this.currentPage);
-      
-      //choose which tasks will be shown
-      this.tasksShow = this.tasks.filter(
-        (task) => task.page.toString() === this.currentPage.toString()
-      );
-      
-      console.log('hello tasks show', this.tasksShow);
-      
-      if (this.tasks.length != 0) {
-        this.pages = this.tasks[this.tasks.length - 1].page;
-      }
+      console.log(this.tasksShow)
     });
   }
   /**
@@ -101,7 +110,6 @@ export class TodoComponent implements OnInit {
    */
   addTask(): void {
     const task = this.taskForm.value;
-    this.tasks.push(task);
 
     this.todoService.addTaskStore(task);
   }

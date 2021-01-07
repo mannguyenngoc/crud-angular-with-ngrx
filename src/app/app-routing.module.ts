@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/todo', pathMatch: 'full' },
   { path: 'todo', component: TodoComponent },
   { path: 'pomodoro', component: PomodoroComponent },
-  { path: 'todo/:id' , component: TaskDetailComponent },
+  { path: 'todo/:id' , component: TaskDetailComponent, },
 ];
 
 @NgModule({

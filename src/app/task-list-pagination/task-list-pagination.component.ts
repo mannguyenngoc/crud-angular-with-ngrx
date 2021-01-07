@@ -8,7 +8,7 @@ import { AppState } from '../state/app.state';
 
 import { selectTasks } from '../state/tasks.selectors';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getAllTasks } from '../state/tasks.reducer';
+import { getAllTasks, getCurrentPage } from '../state/tasks.reducer';
 
 @Component({
   selector: 'app-task-list-pagination',
@@ -20,11 +20,11 @@ export class TaskListPaginationComponent implements OnInit {
 
   @Output() changeTaskDetailView = new EventEmitter<Task>();
 
-  currentPage: number = 0;
+  currentPage: number = 1;
 
   totalPages: number = 0;
 
-  page: number = 0;
+  page: number = 1;
 
   tasks: ReadonlyArray<Task> | any;
   tasksShow: ReadonlyArray<Task> | any;
@@ -32,43 +32,48 @@ export class TaskListPaginationComponent implements OnInit {
   constructor(
     private todoService: TodoService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private store: Store<AppState>
   ) {}
 
   sayHello(task: Task) {
     console.log(task);
     this.changeTaskDetailView.emit(task);
   }
-  
+
   // hàm nhận giá trị output từ child component
   receivePage(value) {
     this.page = value;
 
+    console.log('hello');
     // xử lý ở route khi pagination ở một trang khác.
     this.router.navigate([`/todo/${this.taskDetailId}`], {
       queryParams: { page: this.page },
     });
-
-    this.tasksShow = this.tasks.filter(
-      (task) => task.page.toString() === this.page
-    );
+    this.getTasks(this.page);
   }
   ngOnInit(): void {
+    const page = parseInt(this.route.snapshot.queryParams.page) || 1;
+    this.todoService.getPagesStore().subscribe((pages) => {
+      this.totalPages = Math.ceil(pages / 10);
+    });
+    this.getTasks(page);
+  }
+  getTasks(currentPage) {
+    console.log(currentPage);
+    this.currentPage = currentPage;
+
+    this.store.select(getCurrentPage).subscribe((res) => {
+      console.log(res);
+      console.log(this.currentPage);
+      if (res.toString() !== this.currentPage.toString()) {
+        this.todoService.getTasksByPageStore(this.currentPage);
+      }
+    });
     this.todoService.getAllTaskStore().subscribe((res) => {
-      // lay query params
-      this.currentPage = this.route.snapshot.queryParams.page;
-
-      // them property page vao moi object
-      this.tasks = res.map((task, index) => {
-        const page = Math.floor(index / 10) + 1;
-        return Object.assign({ page: page }, task);
-      });
-
-      this.tasksShow = this.tasks.filter((task) => {
-        return task.page.toString() === this.currentPage;
+      this.tasksShow = res.map((task) => {
+        return Object.assign({ page: this.currentPage }, task);
       });
     });
-
-    this.totalPages = Math.ceil(this.tasks.length / 10);
   }
 }

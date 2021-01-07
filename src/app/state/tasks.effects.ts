@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 
-import { catchError, concatMap, map, mapTo, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { TodoService } from '../todo.service';
 import { Task } from './task.model';
@@ -21,11 +21,24 @@ export class TaskEffects {
   constructor(private actions$: Actions, private todoService: TodoService) {}
 
   @Effect()
+  getPages$ = this.actions$.pipe(
+    ofType(taskActions.GET_PAGES),
+    switchMap(() => this.todoService.getAllTask()),
+    map((pages) => {
+      return new taskActions.GetPagesSuccess(pages);
+    })
+  );
+
+  @Effect()
   getAllTask$ = this.actions$.pipe(
     ofType(taskActions.GET_TASKS),
-    switchMap(() => this.todoService.getAllTask()),
+    map((action: taskActions.GetAllTasks) => {
+      console.log(action);
+      return action.payload;
+    }),
+    switchMap((page) => this.todoService.getTasksByPage(page)),
     map((tasks) => {
-      // console.log(tasks + '\nGet Success');
+      console.log(tasks);
       return new taskActions.GetAllTasksSuccess(tasks);
     }),
     catchError((err) => [new taskActions.GetAllTasksError(err)])
@@ -50,9 +63,12 @@ export class TaskEffects {
       console.log(action);
       return action.payload;
     }),
-    switchMap((task) =>
-      this.todoService.updateTask(Object.assign({ isFinished: false }, task))
-    ),
+    switchMap((task) => {
+      console.log(task);
+      return this.todoService.updateTask(
+        Object.assign({ isFinished: false }, task)
+      );
+    }),
     map(() => {
       console.log('hello i am map');
       return new taskActions.UpdateTaskSuccess();
@@ -65,7 +81,10 @@ export class TaskEffects {
     ofType(taskActions.CREATE_TASK),
     map((action: AddTask) => action.payload),
     switchMap((newTask) => this.todoService.addTask(newTask)),
-    map((res) => new AddTaskSuccess(res.id)),
+    map((res) => {
+      console.log(res);
+      return new AddTaskSuccess(res);
+    }),
     catchError((err) => [new AddTaskError(err)])
   );
 

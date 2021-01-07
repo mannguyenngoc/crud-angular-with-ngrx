@@ -1,7 +1,6 @@
 <div>
-    <div class="button-export">
-        <button (click)="exportToExcel()" ><fa-icon [icon]="faFileExcel" size="1x"></fa-icon>&nbsp;Export to Excel</button>
-    </div>
+    <app-task-search (newItemEvent)="receiveSearchBoxValue($event)"></app-task-search>
+    
     <div>
     </div>
     <div class="container">
@@ -16,23 +15,25 @@
                         &nbsp;
                         
                     </div>
-                        <a routerLink="/todo/{{task._id}}" [queryParams]="{page: task.page}">Go to detail</a>
+                        <a routerLink="/todo/{{task._id}}" [queryParams]="{page: task.page}" >Go to detail</a>
                 </div>      
             </div>
         </div>
-    <app-task-search (newItemEvent)="receiveSearchBoxValue($event)"></app-task-search>
 
-        <div *ngIf="selectedTask"class="show-task">
-            <p>{{selectedTask.name}}</p>
-        </div>
     </div>
-    
     <app-pagination-in-task-list *ngIf="pages != 0" [pages]="pages" (page)="receivePageNumber($event)" class="pagination-in-main-page"></app-pagination-in-task-list>
     
     <form [formGroup]="taskForm" (ngSubmit)="addTask()" class="form-add_task">
-        <input type="text" id="task" formControlName="name" placeholder="Write a new task">&nbsp;
+        <input type="text" id="task" formControlName="name" placeholder="Write a new task" required minlength="1">&nbsp;
+        <br>
+        <span *ngIf="taskForm.controls.name.touched  && taskForm.controls.name.errors?.required">
+            Task name is required
+        </span>
         <input type="number" id="priority" formControlName="priority" min="0" max="5"><br>
-        <button type="submit" [disabled]="!taskForm.valid">Add</button>
+        <button type="submit" [disabled]="!taskForm.valid">Add</button> 
+        
+        
     </form>
     
+    <!-- <app-adding-form></app-adding-form> -->
 </div>
