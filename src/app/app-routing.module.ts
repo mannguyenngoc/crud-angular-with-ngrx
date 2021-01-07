@@ -3,10 +3,11 @@ import { Routes, RouterModule, ActivatedRoute } from '@angular/router';
 import { TodoComponent } from './todo/todo.component';
 import { TaskDetailComponent } from './task-detail/task-detail.component';
 import { PomodoroComponent } from './pomodoro/pomodoro.component';
+import { TaskListPaginationComponent } from './task-list-pagination/task-list-pagination.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/todo', pathMatch: 'full' },
-  { path: 'todo', component: TodoComponent },
+  { path: 'todo',component: TaskListPaginationComponent },
   { path: 'pomodoro', component: PomodoroComponent },
   { path: 'todo/:id' , component: TaskDetailComponent, },
 ];

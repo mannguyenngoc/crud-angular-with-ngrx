@@ -61,9 +61,8 @@ export class TodoComponent implements OnInit {
 
   receivePageNumber(value) {
     this.currentPage = value;
-    console.log(this.currentPage);
 
-    // this.getTasks();
+    this.getTasks();
   }
 
   choseTask(task: Todo) {
