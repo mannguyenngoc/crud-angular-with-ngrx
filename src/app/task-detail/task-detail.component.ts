@@ -65,9 +65,33 @@ export class TaskDetailComponent implements OnInit {
     const id = this.route.snapshot.params.id;
     const page = this.route.snapshot.queryParams.page || 1;
 
-    console.log(page);
     this.taskDetailId = id;
 
+    this.todoService.getAllTaskStore().subscribe((tasks) => {
+      if (tasks.length > 0) {
+        for (let task of tasks) {
+          if (task._id === id) {
+            this.task = task;
+            break;
+          }
+        }
+      } else {
+        this.todoService
+        .getTaskStore(id)
+        .pipe(filter((task) => !!task))
+        .pipe(take(1))
+        .subscribe((task) => {
+          console.log(task);
+  
+          this.router.navigate([`/todo/${id}`], {
+            queryParams: { page: page },
+          });
+  
+          this.task = task;
+          // }
+        });
+      }
+    });
     // this.todoService.getAllTaskStore().subscribe((tasks) => {
     //   console.log(tasks);
     //   console.log(id);
@@ -93,19 +117,6 @@ export class TaskDetailComponent implements OnInit {
     //         // }
     //       });
     // });
-    this.todoService
-      .getTaskStore(id)
-      .pipe(filter((task) => !!task))
-      .pipe(take(1))
-      .subscribe((task) => {
-        console.log(task);
-
-        this.router.navigate([`/todo/${id}`], {
-          queryParams: { page: page },
-        });
-
-        this.task = task;
-        // }
-      });
+    
   }
 }

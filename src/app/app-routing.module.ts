@@ -7,7 +7,7 @@ import { TaskListPaginationComponent } from './task-list-pagination/task-list-pa
 
 const routes: Routes = [
   { path: '', redirectTo: '/todo', pathMatch: 'full' },
-  { path: 'todo',component: TaskListPaginationComponent },
+  { path: 'todo',component: TodoComponent },
   { path: 'pomodoro', component: PomodoroComponent },
   { path: 'todo/:id' , component: TaskDetailComponent, },
 ];

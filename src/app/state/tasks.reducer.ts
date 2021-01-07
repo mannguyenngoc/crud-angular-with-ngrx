@@ -82,17 +82,17 @@ export function reducer(state = initialArrayState, action: AppAction) {
      * Get task by id
      */
     case taskActions.GET_TASK:
-      {
-        console.log(action);
-        console.log(state.tasks);
-        var task = state.tasks.find((task) => task._id === action.payload);
-        console.log(task);
-      }
+      // {
+      //   console.log(action);
+      //   console.log(state.tasks);
+      //   var task = state.tasks.find((task) => task._id === action.payload);
+      //   console.log(task);
+      // }
       return {
         ...state,
         action: taskActions.GET_TASK,
-        done: true,
-        selected: task,
+        done: false,
+        selected: null,
         error: null,
       };
     case taskActions.GET_TASK_SUCCESS: {
