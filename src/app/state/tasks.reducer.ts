@@ -158,6 +158,7 @@ export function reducer(state = initialArrayState, action: AppAction) {
         error: action.payload,
       };
     case taskActions.CREATE_TASK: {
+      console.log(action.payload)
       return {
         ...state,
         selected: action.payload,
@@ -166,14 +167,13 @@ export function reducer(state = initialArrayState, action: AppAction) {
         error: null,
       };
     }
-
     case taskActions.CREATE_TASK_SUCCESS: {
-      const newTask = {
-        ...state.selected,
-        _id: action.payload._id,
-      };
+      const newTask = action.payload
       console.log(newTask);
-      const tasks = [...state.tasks, newTask];
+      let tasks: any = [];
+      if (state.tasks.length < 10) {
+        tasks = [...state.tasks, newTask];
+      } else tasks = state.tasks;
       console.log(tasks);
       return {
         ...state,
@@ -203,7 +203,6 @@ export function reducer(state = initialArrayState, action: AppAction) {
     }
     case taskActions.DELETE_TASK_SUCCESS: {
       const tasks = state.tasks.filter((h) => h._id != state.selected._id);
-
       return {
         ...state,
         tasks,

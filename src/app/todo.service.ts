@@ -86,7 +86,6 @@ export class TodoService {
     return this.store.select(getAllTasks);
   }
   getAllTaskStore() {
-
     return this.store.select(getAllTasks);
   }
   getTaskStore(id: string) {
@@ -96,11 +95,17 @@ export class TodoService {
   }
   addTaskStore(task: Task) {
     this.store.dispatch(new AddTask(task));
+
+    return this.store.select(getAllTasks);
   }
   updateTaskStore(task: Task) {
     this.store.dispatch(new UpdateTask(task));
   }
-  removeTaskStore(id: string) {
+  removeTaskStore(id: string, page) {
     this.store.dispatch(new RemoveTask(id));
+    console.log(this.store.dispatch(new GetAllTasks(page)));
+    // this.store.dispatch(new GetAllTasks(page));
+
+    return this.store.select(getAllTasks);
   }
 }

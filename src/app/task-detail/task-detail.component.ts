@@ -77,19 +77,18 @@ export class TaskDetailComponent implements OnInit {
         }
       } else {
         this.todoService
-        .getTaskStore(id)
-        .pipe(filter((task) => !!task))
-        .pipe(take(1))
-        .subscribe((task) => {
-          console.log(task);
-  
-          this.router.navigate([`/todo/${id}`], {
-            queryParams: { page: page },
+          .getTaskStore(id)
+          .pipe(filter((task) => !!task))
+          .pipe(take(1))
+          .subscribe((task) => {
+            console.log(task);
+
+            this.router.navigate([`/todo/${id}`], {
+              queryParams: { page: page },
+            });
+
+            this.task = task;
           });
-  
-          this.task = task;
-          // }
-        });
       }
     });
     // this.todoService.getAllTaskStore().subscribe((tasks) => {
@@ -117,6 +116,5 @@ export class TaskDetailComponent implements OnInit {
     //         // }
     //       });
     // });
-    
   }
 }

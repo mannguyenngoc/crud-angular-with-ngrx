@@ -14,6 +14,7 @@ import * as fileSaver from 'file-saver';
 
 import { Task } from '../state/task.model';
 import { AppState } from '../state/app.state';
+import { getCurrentPage } from '../state/tasks.reducer';
 
 @Component({
   selector: 'app-todo',
@@ -47,8 +48,6 @@ export class TodoComponent implements OnInit {
   constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
-    // this.getTasks();
-
     this.getTasks();
     this.todoService.getPagesStore().subscribe((res) => {
       this.pages = Math.ceil(res / 10);
@@ -97,11 +96,15 @@ export class TodoComponent implements OnInit {
   // }
 
   getTasks() {
-    this.todoService.getTasksByPageStore(this.currentPage).subscribe((res) => {
-      this.tasksShow = res.map((task)  => {
-        return Object.assign({page: this.currentPage}, task)
-      });
-      console.log(this.tasksShow)
+    this.todoService.getCurrentPage().subscribe((page) => {
+      if (page != this.currentPage) {
+        this.todoService.getTasksByPageStore(this.currentPage);
+      } else
+        this.todoService.getAllTaskStore().subscribe((res) => {
+          this.tasksShow = res.map((task) => {
+            return Object.assign({ page: this.currentPage }, task);
+          });
+        });
     });
   }
   /**
@@ -110,7 +113,12 @@ export class TodoComponent implements OnInit {
   addTask(): void {
     const task = this.taskForm.value;
 
-    this.todoService.addTaskStore(task);
+    this.todoService.addTaskStore(task).subscribe((tasks) => {
+      console.log(tasks);
+      this.todoService.getPagesStore().subscribe((pages) => {
+        console.log(Math.ceil(pages / 10));
+      });
+    });
   }
   /**
    * Delete task action
@@ -118,7 +126,7 @@ export class TodoComponent implements OnInit {
   removeTask(task: Task): void {
     this.tasks = this.tasks.filter((t) => t._id != task._id);
 
-    this.todoService.removeTaskStore(task._id);
+    this.todoService.removeTaskStore(task._id, this.currentPage);
   }
 
   exportToExcel(): void {
