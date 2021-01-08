@@ -105,6 +105,5 @@ export class TodoService {
     this.store.dispatch(new RemoveTask(id));
     // this.store.dispatch(new GetAllTasks(page));
 
-    return this.store.select(getAllTasks);
   }
 }
