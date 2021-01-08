@@ -60,7 +60,6 @@ export class TaskListPaginationComponent implements OnInit {
     this.getTasks(page);
   }
   getTasks(currentPage) {
-    console.log(currentPage);
     this.currentPage = currentPage;
 
     this.store.select(getCurrentPage).subscribe((res) => {

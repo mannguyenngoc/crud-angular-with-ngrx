@@ -197,7 +197,7 @@ export function reducer(state = initialArrayState, action: AppAction) {
         selected,
         tasks: state.tasks.filter((h) => h._id !== action.payload),
         action: taskActions.DELETE_TASK,
-        done: false,
+        done: true,
         error: null,
       };
     }

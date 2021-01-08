@@ -103,7 +103,6 @@ export class TodoService {
   }
   removeTaskStore(id: string, page) {
     this.store.dispatch(new RemoveTask(id));
-    console.log(this.store.dispatch(new GetAllTasks(page)));
     // this.store.dispatch(new GetAllTasks(page));
 
     return this.store.select(getAllTasks);

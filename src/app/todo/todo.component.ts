@@ -116,7 +116,7 @@ export class TodoComponent implements OnInit {
     this.todoService.addTaskStore(task).subscribe((tasks) => {
       console.log(tasks);
       this.todoService.getPagesStore().subscribe((pages) => {
-        console.log(Math.ceil(pages / 10));
+        this.pages = Math.ceil(pages / 10);
       });
     });
   }
@@ -124,9 +124,15 @@ export class TodoComponent implements OnInit {
    * Delete task action
    */
   removeTask(task: Task): void {
-    this.tasks = this.tasks.filter((t) => t._id != task._id);
-
-    this.todoService.removeTaskStore(task._id, this.currentPage);
+    // this.tasks = this.tasks.filter((t) => t._id != task._id);
+    this.todoService
+      .removeTaskStore(task._id, this.currentPage)
+      .subscribe((res) => {
+        console.log(res);
+        this.todoService.getPagesStore().subscribe((pages) => {
+          this.pages = Math.ceil(pages / 10);
+        });
+      });
   }
 
   exportToExcel(): void {
