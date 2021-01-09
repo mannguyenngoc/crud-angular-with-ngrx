@@ -19,7 +19,6 @@ import {
   getOneTask,
   getPages,
 } from './state/tasks.reducer';
-
 export interface Todo {
   _id: string;
   name: string;
@@ -104,6 +103,5 @@ export class TodoService {
   removeTaskStore(id: string, page) {
     this.store.dispatch(new RemoveTask(id));
     // this.store.dispatch(new GetAllTasks(page));
-
   }
 }

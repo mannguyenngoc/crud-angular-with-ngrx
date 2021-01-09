@@ -135,24 +135,33 @@ export class TodoComponent implements OnInit {
    * Delete task action
    */
   removeTask(task: Task): void {
-    // this.tasks = this.tasks.filter((t) => t._id != task._id);
     this.todoService.removeTaskStore(task._id, this.currentPage);
 
     this.todoService.getPagesStore().subscribe((pages) => {
       this.pages = Math.ceil(pages / 10);
     });
 
-    this.todoService.getAllTaskStore().subscribe((res) => {
-      console.log(res.length);
-      if (res.length < 10) {
-        this.todoService.getTasksByPageStore(this.currentPage).subscribe((tasks) => {
+    this.todoService.getTasksByPage(this.currentPage).subscribe((res) => {
+      this.todoService
+        .getTasksByPageStore(this.currentPage)
+        .subscribe((tasks) => {
           this.tasksShow = tasks.map((task) => {
             return Object.assign({ page: this.currentPage }, task);
           });
           console.log(this.tasksShow);
         });
-      }
     });
+    // this.todoService.getAllTaskStore().subscribe((res) => {
+    //   console.log(res.length);
+    //   if (res.length < 10) {
+    //     this.todoService.getTasksByPageStore(this.currentPage).subscribe((tasks) => {
+    //       this.tasksShow = tasks.map((task) => {
+    //         return Object.assign({ page: this.currentPage }, task);
+    //       });
+    //       console.log(this.tasksShow);
+    //     });
+    //   }
+    // });
   }
 
   exportToExcel(): void {

@@ -194,7 +194,7 @@ export function reducer(state = initialArrayState, action: AppAction) {
       const selected = state.tasks.find((h) => h._id === action.payload);
       return {
         ...state,
-        selected,
+        // selected,
         tasks: state.tasks.filter((h) => h._id !== action.payload),
         action: taskActions.DELETE_TASK,
         done: true,
