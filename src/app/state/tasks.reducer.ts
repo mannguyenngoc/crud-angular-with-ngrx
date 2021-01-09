@@ -134,12 +134,6 @@ export function reducer(state = initialArrayState, action: AppAction) {
       const index = state.tasks.findIndex((h) => h._id === state.selected._id);
       console.log(index);
       if (index >= 0) {
-        // const tasks = [
-        //   ...state.tasks.slice(0, index),
-        //   state.selected,
-        //   ...state.tasks.slice(index + 1),
-        // ];
-        console.log(state);
         return {
           ...state,
           done: true,
@@ -158,7 +152,7 @@ export function reducer(state = initialArrayState, action: AppAction) {
         error: action.payload,
       };
     case taskActions.CREATE_TASK: {
-      console.log(action.payload)
+      console.log(action.payload);
       return {
         ...state,
         selected: action.payload,
@@ -168,7 +162,7 @@ export function reducer(state = initialArrayState, action: AppAction) {
       };
     }
     case taskActions.CREATE_TASK_SUCCESS: {
-      const newTask = action.payload
+      const newTask = action.payload;
       console.log(newTask);
       let tasks: any = [];
       if (state.tasks.length < 10) {

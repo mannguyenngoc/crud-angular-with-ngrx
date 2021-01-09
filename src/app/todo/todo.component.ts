@@ -15,6 +15,7 @@ import * as fileSaver from 'file-saver';
 import { Task } from '../state/task.model';
 import { AppState } from '../state/app.state';
 import { getCurrentPage } from '../state/tasks.reducer';
+import { couldStartTrivia } from 'typescript';
 
 @Component({
   selector: 'app-todo',
@@ -59,6 +60,9 @@ export class TodoComponent implements OnInit {
   }
 
   receivePageNumber(value) {
+    // this.todoService.getCurrentPageStore().subscribe((page) => {
+    //   console.log(page);
+    // })
     this.currentPage = value;
 
     this.getTasks();
@@ -67,43 +71,26 @@ export class TodoComponent implements OnInit {
   choseTask(task: Todo) {
     this.selectedTask = task;
   }
-  // test: Task[] = [];
 
   //with NgRx
 
-  // getTasks() {
-  //   this.todoService.getAllTaskStore().subscribe((res) => {
-  //     // adding property page
-  //     this.tasks = res.map((task, index) => {
-  //       const page = Math.floor(index / 10) + 1;
-  //       return Object.assign({ page: page }, task);
-  //     });
-
-  //     console.log('hello tasks', this.tasks);
-  //     console.log('current page: ', this.currentPage);
-
-  //     //choose which tasks will be shown
-  //     this.tasksShow = this.tasks.filter(
-  //       (task) => task.page.toString() === this.currentPage.toString()
-  //     );
-
-  //     console.log('hello tasks show', this.tasksShow);
-
-  //     if (this.tasks.length != 0) {
-  //       this.pages = this.tasks[this.tasks.length - 1].page;
-  //     }
-  //   });
-  // }
-
   getTasks() {
-    this.todoService.getCurrentPage().subscribe((page) => {
+    this.todoService.getCurrentPageStore().subscribe((page) => {
+      console.log(page);
+      console.log(this.currentPage);
       if (page != this.currentPage) {
+        console.log('ok');
         this.todoService.getTasksByPageStore(this.currentPage);
       } else
         this.todoService.getAllTaskStore().subscribe((res) => {
-          this.tasksShow = res.map((task) => {
-            return Object.assign({ page: this.currentPage }, task);
-          });
+          console.log('hello');
+          if (res.length < 10) {
+            this.todoService.getTasksByPageStore(this.currentPage);
+          } else {
+            this.tasksShow = res.map((task) => {
+              return Object.assign({ page: this.currentPage }, task);
+            });
+          }
         });
     });
   }
@@ -113,23 +100,12 @@ export class TodoComponent implements OnInit {
   addTask(): void {
     const task = this.taskForm.value;
 
-    this.todoService.addTaskStore(task).subscribe((tasks) => {
-      console.log(tasks);
-      this.todoService.getPagesStore().subscribe((pages) => {
-        this.pages = Math.ceil(pages / 10);
-      });
+    this.todoService.addTaskStore(task);
+
+    this.todoService.getPagesStore().subscribe((pages) => {
+      this.pages = Math.ceil(pages / 10);
+      console.log('in add task: ', this.pages);
     });
-    // this.todoService.getAllTaskStore().subscribe((res) => {
-    //   if (res.length >= 10) {
-    //     this.todoService
-    //       .getTasksByPageStore(this.currentPage)
-    //       .subscribe((tasks) => {
-    //         this.tasksShow = res.map((task) => {
-    //           return Object.assign({ page: this.currentPage }, task);
-    //         });
-    //       });
-    //   }
-    // });
   }
   /**
    * Delete task action
@@ -139,29 +115,8 @@ export class TodoComponent implements OnInit {
 
     this.todoService.getPagesStore().subscribe((pages) => {
       this.pages = Math.ceil(pages / 10);
+      console.log('in remove task: ', this.pages);
     });
-
-    this.todoService.getTasksByPage(this.currentPage).subscribe((res) => {
-      this.todoService
-        .getTasksByPageStore(this.currentPage)
-        .subscribe((tasks) => {
-          this.tasksShow = tasks.map((task) => {
-            return Object.assign({ page: this.currentPage }, task);
-          });
-          console.log(this.tasksShow);
-        });
-    });
-    // this.todoService.getAllTaskStore().subscribe((res) => {
-    //   console.log(res.length);
-    //   if (res.length < 10) {
-    //     this.todoService.getTasksByPageStore(this.currentPage).subscribe((tasks) => {
-    //       this.tasksShow = tasks.map((task) => {
-    //         return Object.assign({ page: this.currentPage }, task);
-    //       });
-    //       console.log(this.tasksShow);
-    //     });
-    //   }
-    // });
   }
 
   exportToExcel(): void {

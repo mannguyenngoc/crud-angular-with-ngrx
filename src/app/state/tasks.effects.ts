@@ -38,7 +38,6 @@ export class TaskEffects {
     }),
     switchMap((page) => this.todoService.getTasksByPage(page)),
     map((tasks) => {
-      console.log(tasks);
       return new taskActions.GetAllTasksSuccess(tasks);
     }),
     catchError((err) => [new taskActions.GetAllTasksError(err)])

@@ -74,7 +74,7 @@ export class TodoService {
 
     return this.store.select(getPages);
   }
-  getCurrentPage() {
+  getCurrentPageStore() {
     this.store.dispatch(new GetCurrentPage());
 
     return this.store.select(getCurrentPage);
