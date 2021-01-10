@@ -16,6 +16,7 @@ import { Task } from '../state/task.model';
 import { AppState } from '../state/app.state';
 import { getCurrentPage } from '../state/tasks.reducer';
 import { couldStartTrivia } from 'typescript';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-todo',
@@ -60,37 +61,29 @@ export class TodoComponent implements OnInit {
   }
 
   receivePageNumber(value) {
-    // this.todoService.getCurrentPageStore().subscribe((page) => {
-    //   console.log(page);
-    // })
-    this.currentPage = value;
-
-    this.getTasks();
+    if (value != this.currentPage) {
+      this.currentPage = value;
+      this.todoService.getTasksByPageStore(this.currentPage.toString());
+    }
+    // this.getTasks();
   }
 
   choseTask(task: Todo) {
     this.selectedTask = task;
   }
-
+  flag: boolean = false;
   //with NgRx
 
   getTasks() {
-    this.todoService.getCurrentPageStore().subscribe((page) => {
-      console.log(page);
-      console.log(this.currentPage);
-      if (page != this.currentPage) {
-        console.log('ok');
-        this.todoService.getTasksByPageStore(this.currentPage);
+    this.todoService.getAllTaskStore().subscribe((res) => {
+      console.log('hello');
+      if (res.length < 10 && !this.flag) {
+        console.log('that right');
+        this.flag = true;
+        this.todoService.getTasksByPageStore(this.currentPage.toString());
       } else
-        this.todoService.getAllTaskStore().subscribe((res) => {
-          console.log('hello');
-          if (res.length < 10) {
-            this.todoService.getTasksByPageStore(this.currentPage);
-          } else {
-            this.tasksShow = res.map((task) => {
-              return Object.assign({ page: this.currentPage }, task);
-            });
-          }
+        this.tasksShow = res.map((task) => {
+          return Object.assign({ page: this.currentPage }, task);
         });
     });
   }
@@ -111,19 +104,18 @@ export class TodoComponent implements OnInit {
    * Delete task action
    */
   removeTask(task: Task): void {
+    this.flag = false;
+
     this.todoService.removeTaskStore(task._id, this.currentPage);
 
-    this.todoService.getPagesStore().subscribe((pages) => {
-      this.pages = Math.ceil(pages / 10);
-      console.log('in remove task: ', this.pages);
-    });
+    this.todoService.getTasksByPageStore(this.currentPage);
   }
 
-  exportToExcel(): void {
-    this.todoService.exportToExcel().subscribe((res: any) => {
-      console.log(res);
-      let blob: any = new Blob([res], { type: 'text/json; charset=utf-8' });
-      fileSaver.saveAs(blob, 'excel.xlsx');
-    });
-  }
+  // exportToExcel(): void {
+  //   this.todoService.exportToExcel().subscribe((res: any) => {
+  //     console.log(res);
+  //     let blob: any = new Blob([res], { type: 'text/json; charset=utf-8' });
+  //     fileSaver.saveAs(blob, 'excel.xlsx');
+  //   });
+  // }
 }

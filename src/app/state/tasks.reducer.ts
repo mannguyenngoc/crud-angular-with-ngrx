@@ -58,7 +58,6 @@ export function reducer(state = initialArrayState, action: AppAction) {
         currentPage: action.payload,
       };
     case taskActions.GET_TASKS: {
-      console.log(action);
       return {
         ...state,
         action: taskActions.GET_TASKS,

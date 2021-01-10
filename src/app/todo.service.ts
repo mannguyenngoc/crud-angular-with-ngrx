@@ -81,7 +81,6 @@ export class TodoService {
   }
   getTasksByPageStore(page) {
     this.store.dispatch(new GetAllTasks(page));
-
     return this.store.select(getAllTasks);
   }
   getAllTaskStore() {
