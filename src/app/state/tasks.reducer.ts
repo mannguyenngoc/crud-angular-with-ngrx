@@ -112,8 +112,6 @@ export function reducer(state = initialArrayState, action: AppAction) {
         error: action.payload,
       };
     case taskActions.UPDATE_TASK: {
-      console.log('update task la la la ', state);
-      console.log(action);
       return {
         ...state,
         selected: action.payload,

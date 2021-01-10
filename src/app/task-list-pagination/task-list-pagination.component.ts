@@ -60,15 +60,16 @@ export class TaskListPaginationComponent implements OnInit {
     this.getTasks(page);
   }
   getTasks(currentPage) {
-    this.currentPage = currentPage;
+    // this.currentPage = currentPage;
 
-    this.store.select(getCurrentPage).subscribe((res) => {
-      console.log(res);
-      console.log(this.currentPage);
-      if (res.toString() !== this.currentPage.toString()) {
-        this.todoService.getTasksByPageStore(this.currentPage);
-      }
-    });
+    console.log(this.currentPage);
+    console.log(currentPage);
+
+    if (this.currentPage.toString() != currentPage.toString()) {
+      this.currentPage = currentPage;
+
+      this.todoService.getTasksByPageStore(this.currentPage);
+    }
     this.todoService.getAllTaskStore().subscribe((res) => {
       this.tasksShow = res.map((task) => {
         return Object.assign({ page: this.currentPage }, task);

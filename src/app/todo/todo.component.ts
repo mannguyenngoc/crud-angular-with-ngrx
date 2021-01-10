@@ -61,7 +61,10 @@ export class TodoComponent implements OnInit {
   }
 
   receivePageNumber(value) {
-    if (value != this.currentPage) {
+    console.log(value);
+    console.log(this.currentPage);
+
+    if (value.toString() != this.currentPage.toString()) {
       this.currentPage = value;
       this.todoService.getTasksByPageStore(this.currentPage.toString());
     }
@@ -108,7 +111,11 @@ export class TodoComponent implements OnInit {
 
     this.todoService.removeTaskStore(task._id, this.currentPage);
 
-    this.todoService.getTasksByPageStore(this.currentPage);
+    // this.todoService.getTasksByPageStore(this.currentPage);
+    this.todoService.getPagesStore().subscribe((pages) => {
+      this.pages = Math.ceil(pages / 10);
+      console.log('in remove task: ', this.pages);
+    });
   }
 
   // exportToExcel(): void {
