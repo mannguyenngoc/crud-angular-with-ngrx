@@ -172,6 +172,7 @@ export function reducer(state = initialArrayState, action: AppAction) {
         selected: null,
         error: null,
         done: true,
+        pages: state.pages + 1
       };
     }
     case taskActions.CREATE_TASK_ERROR:
@@ -190,6 +191,7 @@ export function reducer(state = initialArrayState, action: AppAction) {
         action: taskActions.DELETE_TASK,
         done: true,
         error: null,
+        pages: state.pages-1
       };
     }
     case taskActions.DELETE_TASK_SUCCESS: {

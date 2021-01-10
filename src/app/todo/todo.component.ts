@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TodoService, Todo } from '../todo.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -8,15 +8,7 @@ import {
   faEdit,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { Store } from '@ngrx/store';
-
-import * as fileSaver from 'file-saver';
-
 import { Task } from '../state/task.model';
-import { AppState } from '../state/app.state';
-import { getCurrentPage } from '../state/tasks.reducer';
-import { couldStartTrivia } from 'typescript';
-import { filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-todo',
@@ -30,12 +22,10 @@ export class TodoComponent implements OnInit {
   tasksShow: ReadonlyArray<Task> | any = [];
 
   pages: number = 1;
-
   currentPage: number = 1;
 
   searchBoxValue: string = '';
-
-  search: string = '';
+  // search: string = '';
 
   //icon
   faFileExcel = faFileExcel;
@@ -61,19 +51,16 @@ export class TodoComponent implements OnInit {
   }
 
   receivePageNumber(value) {
-    console.log(value);
-    console.log(this.currentPage);
-
     if (value.toString() != this.currentPage.toString()) {
       this.currentPage = value;
       this.todoService.getTasksByPageStore(this.currentPage.toString());
     }
-    // this.getTasks();
   }
 
   choseTask(task: Todo) {
     this.selectedTask = task;
   }
+
   flag: boolean = false;
   //with NgRx
 
@@ -97,11 +84,6 @@ export class TodoComponent implements OnInit {
     const task = this.taskForm.value;
 
     this.todoService.addTaskStore(task);
-
-    this.todoService.getPagesStore().subscribe((pages) => {
-      this.pages = Math.ceil(pages / 10);
-      console.log('in add task: ', this.pages);
-    });
   }
   /**
    * Delete task action
@@ -111,11 +93,10 @@ export class TodoComponent implements OnInit {
 
     this.todoService.removeTaskStore(task._id, this.currentPage);
 
-    // this.todoService.getTasksByPageStore(this.currentPage);
-    this.todoService.getPagesStore().subscribe((pages) => {
-      this.pages = Math.ceil(pages / 10);
-      console.log('in remove task: ', this.pages);
-    });
+    // this.todoService.getPagesStore().subscribe((pages) => {
+    //   this.pages = Math.ceil(pages / 10);
+    //   console.log('in remove task: ', this.pages);
+    // });
   }
 
   // exportToExcel(): void {
