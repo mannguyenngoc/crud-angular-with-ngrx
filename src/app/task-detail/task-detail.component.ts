@@ -16,7 +16,6 @@ export class TaskDetailComponent implements OnInit {
   listTasks: Task[] = [];
 
   error: string = 'Error';
-  isReRender: boolean = false;
 
   taskClone: Task | any = { _id: '', name: '', priority: 0 };
 
@@ -55,7 +54,7 @@ export class TaskDetailComponent implements OnInit {
     // update task in store
     this.todoService.updateTaskStore(this.taskClone);
 
-    this.getTask();
+    // this.getTask();
   }
 
   /**
@@ -91,30 +90,5 @@ export class TaskDetailComponent implements OnInit {
           });
       }
     });
-    // this.todoService.getAllTaskStore().subscribe((tasks) => {
-    //   console.log(tasks);
-    //   console.log(id);
-    //   const task = tasks.find((task) => {
-    //     return task._id === id;
-    //   });
-
-    //   if (task) {
-    //     this.task = task;
-    //   } else
-    //     this.todoService
-    //       .getTaskStore(id)
-    //       .pipe(filter((task) => !!task))
-    //       .pipe(take(1))
-    //       .subscribe((task) => {
-    //         console.log(task);
-
-    //         this.router.navigate([`/todo/${id}`], {
-    //           queryParams: { page: page },
-    //         });
-
-    //         this.task = task;
-    //         // }
-    //       });
-    // });
   }
 }

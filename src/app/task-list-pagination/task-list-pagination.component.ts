@@ -20,7 +20,7 @@ export class TaskListPaginationComponent implements OnInit {
 
   @Output() changeTaskDetailView = new EventEmitter<Task>();
 
-  currentPage: number = 1;
+  currentPage: number = 0;
 
   totalPages: number = 0;
 
@@ -32,8 +32,7 @@ export class TaskListPaginationComponent implements OnInit {
   constructor(
     private todoService: TodoService,
     private route: ActivatedRoute,
-    private router: Router,
-    private store: Store<AppState>
+    private router: Router
   ) {}
 
   sayHello(task: Task) {
@@ -52,19 +51,24 @@ export class TaskListPaginationComponent implements OnInit {
     });
     this.getTasks(this.page);
   }
+
   ngOnInit(): void {
     const page = parseInt(this.route.snapshot.queryParams.page) || 1;
+
     this.todoService.getPagesStore().subscribe((pages) => {
       this.totalPages = Math.ceil(pages / 10);
     });
+
     this.getTasks(page);
   }
+
   getTasks(currentPage) {
     if (this.currentPage.toString() != currentPage.toString()) {
       this.currentPage = currentPage;
 
       this.todoService.getTasksByPageStore(this.currentPage);
     }
+    
     this.todoService.getAllTaskStore().subscribe((res) => {
       this.tasksShow = res.map((task) => {
         return Object.assign({ page: this.currentPage }, task);
